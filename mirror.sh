@@ -20,6 +20,8 @@ then
 		mgmt_cli --session-id $SID delete group name grp_$GW_NAME
 		mgmt_cli --session-id $SID delete host name ip_$GW_NAME
 		mgmt_cli publish --session-id $SID
+	echo "Logging out of session"
+		mgmt_cli logout --session-id $SID
         exit 0
 fi
 if [[ $CUSTOM_PARAMETERS != MIRROR ]];
