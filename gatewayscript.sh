@@ -1,5 +1,6 @@
 #!/bin/bash
 
-clish -c 'add vxlan id 400 dev eth1 remote 10.10.10.10' -s
+fw ctl set int fw_daf_module_mac_mode 1
+echo "fw_daf_module_mac_mode=1" >> $FWDIR/modules/fwkern.conf
 
 exit 0
