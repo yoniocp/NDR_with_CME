@@ -36,7 +36,7 @@ POLICY_PACKAGE_NAME=$RULEBASE
     SID=$(mgmt_cli -r true login -f json | jq -r '.sid')
     GW_JSON=$(mgmt_cli --session-id $SID show simple-gateway name $GW_NAME -f json)
     GW_UID=$(echo $GW_JSON | jq '.uid')
-	GW_ETH1=$(echo $GW_JSON | jq '."interfaces"[0] ."ipv4-address"')
+    GW_ETH1=$(echo $GW_JSON | jq '."interfaces"[1] ."ipv4-address"')
 	
     echo "Configure GW topology"
 		mgmt_cli --session-id $SID add host name ip_$GW_NAME ip-address $GW_ETH1
