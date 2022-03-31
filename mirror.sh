@@ -37,12 +37,14 @@ POLICY_PACKAGE_NAME=$RULEBASE
     GW_JSON=$(mgmt_cli --session-id $SID show simple-gateway name $GW_NAME -f json)
     GW_UID=$(echo $GW_JSON | jq '.uid')
     GW_ETH1=$(echo $GW_JSON | jq '."interfaces"[1] ."ipv4-address"')
+    GW_ETH0=$(echo $GW_JSON | jq '."interfaces"[0] ."ipv4-address"')
 	
     echo "Configure GW topology"
 		mgmt_cli --session-id $SID add host name ip_$GW_NAME ip-address $GW_ETH1 ignore-warnings true
 		mgmt_cli --session-id $SID add group name grp_$GW_NAME members ip_$GW_NAME
 		mgmt_cli --session-id $SID set simple-gateway name $GW_NAME vpn-settings.vpn-domain-type manual vpn-settings.vpn-domain grp_$GW_NAME
 		mgmt_cli --session-id $SID set vpn-community-star name $COMM_VPN satellite-gateways.add $GW_NAME
+		mgmt_cli --session-id $SID set simple-gateway name $GW_NAME vpn-settings.link-selection.ip-selection use-selected-address-from-topology vpn-settings.link-selection.ip-address $GW_ETH0
     
 	echo "Add VXLAN interface"
 		GW_ETH0_NAME=$(echo $GW_JSON | jq '.interfaces[0] .name')
