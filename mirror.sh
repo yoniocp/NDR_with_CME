@@ -44,7 +44,7 @@ POLICY_PACKAGE_NAME=$RULEBASE
 		mgmt_cli --session-id $SID add group name grp_$GW_NAME members ip_$GW_NAME
 		mgmt_cli --session-id $SID set simple-gateway name $GW_NAME vpn-settings.vpn-domain-type manual vpn-settings.vpn-domain grp_$GW_NAME
 		mgmt_cli --session-id $SID set vpn-community-star name $COMM_VPN satellite-gateways.add $GW_NAME
-		mgmt_cli --session-id $SID set simple-gateway name $GW_NAME vpn-settings.link-selection.ip-selection use-selected-address-from-topology vpn-settings.link-selection.ip-address $GW_ETH0
+		mgmt_cli --session-id $SID set simple-gateway name $GW_NAME vpn-settings.link-selection.ip-selection use-selected-address-from-topology vpn-settings.link-selection.ip-address $GW_ETH1
     
 	echo "Add VXLAN interface"
 		GW_ETH0_NAME=$(echo $GW_JSON | jq '.interfaces[0] .name')
