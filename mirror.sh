@@ -1,7 +1,7 @@
 #!/bin/bash
 : '
 ------- No supported in production -------
-Enable MSS Clamping in a CME managed GW
+Enable Mirror and Decrypt in a CME managed GW
 Needs to be run in Autoprovision template with "MIRROR" as a custom parameter and also Rulebase name to install and VPN community as last parameter
 ------- No supported in production -------
 '
