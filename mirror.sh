@@ -11,6 +11,12 @@ GW_NAME=$2
 CUSTOM_PARAMETERS=$3
 RULEBASE=$4
 COMM_VPN=$5
+# standard output will also be redirected to the log file
+LOGFILE=/var/log/mirror.log
+exec > >(tee -a $LOGFILE)
+
+echo "`date`: Invoked with $*"
+
 if [[ $AUTOPROV_ACTION == delete ]]
 then
 	echo "Connection to API server"
@@ -31,6 +37,8 @@ fi
 if [[ $CUSTOM_PARAMETERS == MIRROR ]]
 then
 INSTALL_STATUS=1
+INSTALL_TRY=1
+INSTALL_MAX=5
 POLICY_PACKAGE_NAME=$RULEBASE
     echo "Connection to API server"
     SID=$(mgmt_cli -r true login -f json | jq -r '.sid')
@@ -60,14 +68,16 @@ POLICY_PACKAGE_NAME=$RULEBASE
         mgmt_cli publish --session-id $SID
     
 	echo "Install policy"
-        until [[ $INSTALL_STATUS != 1 ]]; do
+        while [[ $INSTALL_STATUS != 0 ]] && [[ $INSTALL_TRY < $INSTALL_MAX ]]; do
             mgmt_cli --session-id $SID -f json install-policy policy-package $POLICY_PACKAGE_NAME targets $GW_UID
             INSTALL_STATUS=$?
+            echo "Installation # $INSTALL_TRY finished with $INSTALL_STATUS"
+            INSTALL_TRY=$(($INSTALL_TRY+1))
         done
     
-	echo "Policy Installed"
+	echo "Policy Installation ended with $INSTALL_STATUS"
     echo "Logging out of session"
     mgmt_cli logout --session-id $SID
-    exit 0
+    exit $INSTALL_STATUS
 fi
 exit 0
